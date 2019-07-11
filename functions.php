@@ -1,6 +1,6 @@
 <?php
 
-$db = mysqli_connect('localhost', 'root', '', 'system_login_native');
+$db = mysqli_connect('localhost', 'root', 'root', 'system_login_native');
 
 if( !$db ){
     die("Gagal terhubung dengan database: " . mysqli_connect_error());
