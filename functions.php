@@ -6,7 +6,6 @@ if( !$db ){
     die("Gagal terhubung dengan database: " . mysqli_connect_error());
 }
 
-
 function register ($data){
 	global $db;
 
@@ -50,6 +49,17 @@ function login ($data){
 		//Cek password
 		$row = mysqli_fetch_assoc($result);
 		if (password_verify($password, $row['password'])){
+			//Set session
+			session_start();
+			$_SESSION['login'] = true;
+
+			//Remember me
+			if (isset($data['remember'])) {
+				//Set cookie
+				setcookie('key', $row['id'], time()+60);
+				setcookie('val', hash('sha256',$row['email']) , time()+60);
+			}
+
 			header("Location: index.php");
 			exit;
 		}

@@ -1,10 +1,31 @@
 <?php
+  
+  session_start();
   require 'functions.php';
+
+  //Cek cookie
+  if (isset($_COOKIE['key']) && isset($_COOKIE['val'])) {
+    $id = $_COOKIE['key'];
+    $val = $_COOKIE['val'];
+    //get email by id
+    $result = mysqli_query($db, "SELECT email FROM users WHERE id = $id");
+    $row = mysqli_fetch_assoc($result);
+    //Cek cookie
+    if ($val === hash('sha256', $row['email'])) {
+      $_SESSION['login'] = true;
+    }
+  }
+  
+  if (isset($_SESSION['login'])) {
+    header('Location: index.php');
+    exit;
+  }
 
   if (isset($_POST['btn-login'])) {
     login($_POST);
   }
   $error = false;
+
 
 ?>
 
@@ -30,7 +51,7 @@
         <div class="card-body">
           <form action="" method="POST">
             <div class="form-group">
-              <?php if ($error=true): ?>
+              <?php if ($error==true): ?>
                 <p class="text-danger">Email / password tidak sesuai !</p>
               <?php endif ?>
               <label for="exampleInputEmail1">Email address</label>
@@ -41,8 +62,8 @@
               <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
             </div>
             <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="exampleCheck1">
-              <label class="form-check-label" for="exampleCheck1" name="remember">Check me out</label>
+              <input type="checkbox" class="form-check-input" id="exampleCheck1" name="remember">
+              <label class="form-check-label" for="exampleCheck1">Check me out</label>
             </div>
             <button type="submit" class="btn btn-primary btn-sm" name="btn-login">Login</button>
           </form>
