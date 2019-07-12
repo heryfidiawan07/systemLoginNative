@@ -1,6 +1,6 @@
 <?php
 
-$db = mysqli_connect('localhost', 'root', 'root', 'system_login_native');
+$db = mysqli_connect('localhost', 'root', '', 'system_login_native');
 
 if( !$db ){
     die("Gagal terhubung dengan database: " . mysqli_connect_error());
@@ -35,14 +35,27 @@ function register ($data){
 	// Insert to database
 	mysqli_query($db, "INSERT INTO users VALUES('','$email', '$password')");
 	return mysqli_affected_rows($db);
-
 }
 
 
 function login ($data){
+	global $db;
+
 	$email = $data['email'];
 	$password = $data['password'];
-	echo $email;
+
+	$result = mysqli_query($db, "SELECT * FROM users WHERE email = '$email'");
+	//Cek email
+	if (mysqli_num_rows($result) === 1) {
+		//Cek password
+		$row = mysqli_fetch_assoc($result);
+		if (password_verify($password, $row['password'])){
+			header("Location: index.php");
+			exit;
+		}
+	}
+	//Error
+	$error = true;
 }
   
 

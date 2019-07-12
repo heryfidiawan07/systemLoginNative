@@ -1,3 +1,13 @@
+<?php
+  require 'functions.php';
+
+  if (isset($_POST['btn-login'])) {
+    login($_POST);
+  }
+  $error = false;
+
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -20,6 +30,9 @@
         <div class="card-body">
           <form action="" method="POST">
             <div class="form-group">
+              <?php if ($error=true): ?>
+                <p class="text-danger">Email / password tidak sesuai !</p>
+              <?php endif ?>
               <label for="exampleInputEmail1">Email address</label>
               <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email">
             </div>
